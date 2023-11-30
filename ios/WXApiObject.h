@@ -164,108 +164,6 @@ typedef void(^WXCheckULCompletion)(WXULCheckStep step, WXCheckULStepResult* resu
 #pragma mark - WXMediaMessage
 @class WXMediaMessage;
 
-#ifndef BUILD_WITHOUT_PAY
-
-#pragma mark - PayReq
-/*! @brief 第三方向微信终端发起支付的消息结构体
- *
- *  第三方向微信终端发起支付的消息结构体，微信终端处理后会向第三方返回处理结果
- * @see PayResp
- */
-@interface PayReq : BaseReq
-
-/** 商家向财付通申请的商家id */
-@property (nonatomic, copy) NSString *partnerId;
-/** 预支付订单 */
-@property (nonatomic, copy) NSString *prepayId;
-/** 随机串，防重发 */
-@property (nonatomic, copy) NSString *nonceStr;
-/** 时间戳，防重发 */
-@property (nonatomic, assign) UInt32 timeStamp;
-/** 商家根据财付通文档填写的数据和签名 */
-@property (nonatomic, copy) NSString *package;
-/** 商家根据微信开放平台文档对数据做的签名 */
-@property (nonatomic, copy) NSString *sign;
-
-@end
-
-
-#pragma mark - PayResp
-/*! @brief 微信终端返回给第三方的关于支付结果的结构体
- *
- *  微信终端返回给第三方的关于支付结果的结构体
- */
-@interface PayResp : BaseResp
-
-/** 财付通返回给商家的信息 */
-@property (nonatomic, copy) NSString *returnKey;
-
-@end
-
-#pragma mark - WXOfflinePay
-/*! @brief 第三方向微信终端发起离线支付
- *
- *  第三方向微信终端发起离线支付的消息结构体
- */
-@interface WXOfflinePayReq : BaseReq
-
-@end
-
-/*! @brief 第三方向微信终端发起离线支付返回
- *
- *  第三方向微信终端发起离线支付返回的消息结构体
- */
-@interface WXOfflinePayResp : BaseResp
-
-@end
-
-
-#pragma mark - WXNontaxPayReq
-@interface WXNontaxPayReq:BaseReq
-
-@property (nonatomic, copy) NSString *urlString;
-
-@end
-
-#pragma mark - WXNontaxPayResp
-@interface WXNontaxPayResp : BaseResp
-
-@property (nonatomic, copy) NSString *wxOrderId;
-
-@end
-
-#pragma mark - WXPayInsuranceReq
-@interface WXPayInsuranceReq : BaseReq
-
-@property (nonatomic, copy) NSString *urlString;
-
-@end
-
-#pragma mark - WXPayInsuranceResp
-@interface WXPayInsuranceResp : BaseResp
-
-@property (nonatomic, copy) NSString *wxOrderId;
-
-@end
-
-
-#pragma mark - WXQRCodePayReq
-@interface WXQRCodePayReq : BaseReq
-/** 码内容
- * @note 必填，码长度必须大于0且小于10K
- */
-@property (nonatomic, copy) NSString *codeContent;
-/** 额外信息
- * @note 长度必须大于0且小于10K
- */
-@property (nonatomic, copy) NSString *extraMsg;
-
-@end
-
-@interface WXQRCodePayResp : BaseResp
-@end
-
-#endif
 
 
 #pragma mark - SendAuthReq
@@ -821,7 +719,7 @@ typedef void(^WXCheckULCompletion)(WXULCheckStep step, WXCheckULStepResult* resu
 /*! @brief 设置消息缩略图的方法
  *
  * @param image 缩略图
- * @note 大小不能超过64K
+ * @note 大小不能超过256K
  */
 - (void)setThumbImage:(UIImage *)image;
 
@@ -1232,6 +1130,31 @@ typedef void(^WXCheckULCompletion)(WXULCheckStep step, WXCheckULStepResult* resu
 
 /** 业务所需的额外信息 */
 @property (nonatomic, strong, nullable) NSDictionary *extraInfoDic;
+
+@end
+
+@interface WXNativeGamePageObject : NSObject
+
+/** 是否为视频类型
+ */
+@property (nonatomic, assign) BOOL isVideo;
+
+/** 视频时长
+ @note 当为视频类型时，必填；单位为秒
+ */
+@property (nonatomic, assign) UInt32 videoDuration;
+
+/** 透传字段
+ @note 长度限制为100K
+ */
+@property (nonatomic, copy) NSString *shareData;
+
+/** 缩略图
+ @note 大小限制为256K
+ */
+@property (nonatomic, strong) NSData *gameThumbData;
+
++ (WXNativeGamePageObject *)object;
 
 @end
 
